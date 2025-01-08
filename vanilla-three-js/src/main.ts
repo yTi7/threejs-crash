@@ -30,16 +30,16 @@ const camera = new THREE.PerspectiveCamera(
 camera.position.z = 5;
 scene.add(camera);
 
-// Create a geometry and a material for the geometry and add it to the scene
-const icosahedronGeometry = new THREE.IcosahedronGeometry(1.0, 2); // Basically a sphere
-const icosahedronMaterial = new THREE.MeshStandardMaterial({
-  color: 0xffffff,
-  transparent: true,
-  flatShading: true,
-});
-const icosahedron = new THREE.Mesh(icosahedronGeometry, icosahedronMaterial); // This is the final mesh
-scene.add(icosahedron);
+const icosahedronGeometry = new THREE.SphereGeometry(1.0);
+const loadingManager = new THREE.LoadingManager();
+const loader = new THREE.TextureLoader(loadingManager);
+const material = loader.load("/8k_earth_daymap.jpg");
+loadingManager.onLoad = () => {
+  const icosahedronMaterial = new THREE.MeshStandardMaterial({ map: material });
+  const icosahedron = new THREE.Mesh(icosahedronGeometry, icosahedronMaterial); // This is the final mesh
 
+  scene.add(icosahedron);
+};
 // Create a wireframe material
 const wireMat = new THREE.MeshBasicMaterial({
   color: 0xffffff,
@@ -47,10 +47,10 @@ const wireMat = new THREE.MeshBasicMaterial({
 });
 const wireMesh = new THREE.Mesh(icosahedronGeometry, wireMat); // Create a wireframe mesh
 wireMesh.scale.setScalar(1.07); // Scale the wireframe mesh slightly larger than the icosahedron (sphere)
-icosahedron.add(wireMesh); // Add the wireframe to the mesh
+// icosahedron.add(wireMesh); // Add the wireframe to the mesh
 
 // Create a Hemisphere light that acts as a global light source (sky and ground)
-const hemiLight = new THREE.HemisphereLight(0xffffff, 0xff0000, 1);
+const hemiLight = new THREE.HemisphereLight(0xffffff, 0x000000, 2);
 scene.add(hemiLight);
 
 // Create the WebGL renderer and attach it to the canvas
@@ -70,7 +70,7 @@ controls.enablePan = true;
 function animate() {
   requestAnimationFrame(animate);
   // icosahedron.rotation.x += 0.01;
-  icosahedron.rotation.y += 0.01;
+  // icosahedron.rotation.y += 0.01;
   renderer.render(scene, camera); // Render the scene from the perspective of the camera
   controls.update(); // Update the controls
 }
