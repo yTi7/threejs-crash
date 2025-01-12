@@ -14,10 +14,10 @@ const Sphere = () => {
   return (
     <>
       <mesh ref={object} receiveShadow>
-        <sphereGeometry args={[, 32, 16]} />
+        <boxGeometry args={[]} />
         <meshStandardMaterial color="pink" metalness={1} roughness={0.5} />
         <mesh castShadow={true}>
-          <sphereGeometry args={[1.05]} />
+          <boxGeometry args={[1.05, 1.05, 1.05, 2, 2, 2]} />
           <meshStandardMaterial color="pink" wireframe />
         </mesh>
       </mesh>
